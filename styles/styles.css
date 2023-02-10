@@ -3,3 +3,25 @@
     margin: 0px;
     box-sizing: border-box;
 }
+
+ul{
+    list-style:none
+}
+nav>ul>li{
+    padding: 5px;
+    margin: 20px;
+    background-color: white;
+}
+.nav-link{
+    color: black !important;
+}
+header{
+    background-color: grey;
+}
+footer{
+    background-color: aqua;
+}
+
+footer img{
+    height: 30px;
+}
