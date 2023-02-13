@@ -24,4 +24,47 @@ footer{
 
 footer img{
     height: 30px;
+    margin: 5px;
+    border-radius: 20px;
 }
+body{
+    border: solid 1px black;
+}
+header{
+    border: solid 1px black;
+}
+footer{
+    border: solid 1px black;
+}
+div a img{
+    max-width: 5vw;
+    border: solid 1px black;
+}
+.nav-panel{
+    border: solid 1px black;
+}
+.form-check{
+    padding: 20px;
+}
+.card{
+    margin: 20px;
+}
+#Message{
+    padding-bottom: 3rem;
+}
+table, th, td {
+    border: 1px solid black !important;
+    border-collapse: collapse !important;
+  }
+th {
+    background-color: #96D4D4;
+    height: 2rem;
+    font-size: 1.5rem;
+  }
+
+  @media only screen and (max-width: 768) {
+    #Logo {
+    
+    }
+    }
+    
