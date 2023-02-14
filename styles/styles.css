@@ -8,8 +8,6 @@ ul{
     list-style:none
 }
 nav>ul>li{
-    padding: 5px;
-    margin: 20px;
     background-color: white;
 }
 .nav-link{
@@ -37,7 +35,7 @@ footer{
     border: solid 1px black;
 }
 div a img{
-    max-width: 5vw;
+    width: 50px;
     border: solid 1px black;
 }
 .nav-panel{
@@ -63,8 +61,13 @@ th {
   }
 
   @media only screen and (max-width: 768) {
-    #Logo {
-    
+    .logocont {
+        justify-content: center !important;
     }
     }
-    
+
+
+
+    #btn-busq{
+        max-height: 38px !important;
+    }
