@@ -177,7 +177,10 @@
         <img src="${event.image}" class="card-img-top" alt="${event.name}">
         <h5 class="card-title">${event.name}</h5>
         <p class="card-text">${event.description}</p>
-        <a href="Details.html" class="btn btn-primary">Details...</a>
+        <div class="row d-flex justify-content-center">
+        <p class="col-sm-6 col-lg-6">Price: ${event.price}$</p>
+        <a href="Details.html" class="btn btn-primary col-sm-6 col-lg-6">Details...</a>
+        </div>
     </div>`;
   };
   document.getElementById('cardContainer').innerHTML = htmlEvents ; 
