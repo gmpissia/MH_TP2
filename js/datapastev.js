@@ -185,5 +185,37 @@
           <a href="Details.html" class="btn btn-primary col-sm-6 col-lg-6">Details...</a>
           </div>
       </div>`;
-  }};
+  }
+};
   document.getElementById('cardContainer').innerHTML = htmlEvents ; 
+  let pastEvents=[];
+  for(let event of events){
+    let eventDate = new Date(event.date)
+    let currentDatenow = new Date(currentDate)
+    if (eventDate < currentDatenow)
+      pastEvents.push(event)
+  };
+  console.log(pastEvents);
+
+  const input = document.getElementById('form1');
+  let dataInput ="";
+  input.addEventListener("change", (event)=>{
+    dataInput = event.target.value
+    dataInput = dataInput.toLowerCase();
+    const eventsTextFilter = pastEvents.filter(event => event.name.toLowerCase().includes(dataInput));
+    let filterHtml ="";
+    for(event of eventsTextFilter){
+      filterHtml += `<div class="card" style="width: 18rem;">
+      <img src="${event.image}" class="card-img-top" alt="${event.name}">
+      <h5 class="card-title">${event.name}</h5>
+      <p class="card-text">${event.description}</p>
+      <div class="row d-flex justify-content-center">
+      <p class="col-sm-6 col-lg-6">Price: ${event.price}$</p>
+      <a href="Details.html" class="btn btn-primary col-sm-6 col-lg-6">Details...</a>
+      </div>
+  </div>`;
+    };
+    document.getElementById('cardContainer').innerHTML = filterHtml ;
+    if( filterHtml=="")
+    document.getElementById('cardContainer').innerHTML = "No se ha encontrado ningun evento con su criterio de busqueda, intente nuevamente.";
+  });
