@@ -171,86 +171,19 @@
         "price":250
       }
     ];
-    let htmlEvents = "";
-    for(let event of events){
-        let currentDatenow = new Date(currentDate);
-        let eventDate = new Date(event.date);
-        if (eventDate < currentDatenow) {
-          htmlEvents += `<div class="card" style="width: 18rem;">
-          <img src="${event.image}" class="card-img-top" alt="${event.name}">
-          <h5 class="card-title">${event.name}</h5>
-          <p class="card-text">${event.description}</p>
-          <div class="row d-flex justify-content-center">
-          <p class="col-sm-6 col-lg-6">Price: ${event.price}$</p>
-          <a href="./Details.html?id=${event._id}" class="btn btn-primary col-sm-6 col-lg-6">Details...</a>
-          </div>
-      </div>`;
-  }
-};
-  document.getElementById('cardContainer').innerHTML = htmlEvents ; 
-  let pastEvents=[];
-  for(let event of events){
-    let eventDate = new Date(event.date)
-    let currentDatenow = new Date(currentDate)
-    if (eventDate < currentDatenow)
-      pastEvents.push(event)
-  };
 
-  const input = document.getElementById('form1');
-  const checkboxes = document.querySelectorAll('input[type=checkbox]');
-  let checkedValues = [];
-  let dataInput = "";
-  
-  // Event listener for text input
-  input.addEventListener("input", (event) => {
-    dataInput = event.target.value.trim().toLowerCase();
-    applyFilters();
-  });
-  
-  // Event listener for checkboxes
-  checkboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', () => {
-      if (checkbox.checked) {
-        checkedValues.push(checkbox.value);
-      } else {
-        const index = checkedValues.indexOf(checkbox.value);
-        if (index !== -1) {
-          checkedValues.splice(index, 1);
-        }
-      }
-      applyFilters();
-    });
-  });
-  
-  function applyFilters() {
-    const eventsFiltered = pastEvents.filter(event => {
-      // Filter by text input
-      const nameMatch = event.name.toLowerCase().includes(dataInput);
-      const descriptionMatch = event.description.toLowerCase().includes(dataInput);
-  
-      // Filter by checkboxes
-      const categoryMatch = checkedValues.includes(event.category);
-  
-      return (nameMatch || descriptionMatch) && (categoryMatch || checkedValues.length === 0);
-    });
-  
-    let html = "";
-    if (eventsFiltered.length > 0) {
-      for (let event of eventsFiltered) {
-        html += `
-          <div class="card" style="width: 18rem;">
-            <img src="${event.image}" class="card-img-top" alt="${event.name}">
-            <h5 class="card-title">${event.name}</h5>
-            <p class="card-text">${event.description}</p>
-            <div class="row d-flex justify-content-center">
-              <p class="col-sm-6 col-lg-6">Price: ${event.price}$</p>
-              <a href="./Details.html?id=${event._id}" class="btn btn-primary col-sm-6 col-lg-6">Details...</a>
-            </div>
-          </div>
-        `;
-      }
-    } else {
-      html = "No events found.";
-    }
-    document.getElementById('cardContainer').innerHTML = html;}
-
+  let queryString = location.search;
+  let params = new URLSearchParams(queryString);
+  let _id = params.get('id');
+  let event = events.find(event => event._id == _id);
+ 
+  document.getElementById('detailEvent').innerHTML= `
+  <div class="card" style="width: 18rem;">
+    <img src="${event.image}" class="card-img-top" alt="${event.name}">
+    <h5 class="card-title">${event.name}</h5>
+    <p class="card-text">${event.description}</p>
+    <div class="row d-flex justify-content-center">
+      <p>Price: ${event.price}$</p>
+    </div>
+  </div>
+`;

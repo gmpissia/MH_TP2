@@ -182,7 +182,7 @@
           <p class="card-text">${event.description}</p>
           <div class="row d-flex justify-content-center align-items-center">
           <p class="col-sm-6 col-lg-6">Price: ${event.price}$</p>
-          <a href="Details.html" class="btn btn-primary col-sm-6 col-lg-6">Details...</a>
+          <a href="./Details.html?id=${event._id}" class="btn btn-primary col-sm-6 col-lg-6">Details...</a>
           </div>
       </div>`;
   }};
@@ -243,7 +243,7 @@
             <p class="card-text">${event.description}</p>
             <div class="row d-flex justify-content-center">
               <p class="col-sm-6 col-lg-6">Price: ${event.price}$</p>
-              <a href="Details.html?id=${event._id}" class="btn btn-primary col-sm-6 col-lg-6">Details...</a>
+              <a href="./Details.html?id=${event._id}" class="btn btn-primary col-sm-6 col-lg-6">Details...</a>
             </div>
           </div>
         `;
@@ -253,18 +253,4 @@
     }
     document.getElementById('cardContainer').innerHTML = html;}
 
-    const queryString = location.search;
-    const params = new URLSearchParams(queryString);
-    const id = params.get("id");
-    let eventDetail = events.find(event => event._id == id);
-    console.log(eventDetail);
-    document.getElementById("detailEvent").innerHTML= `
-    <div class="card" style="width: 18rem;">
-      <img src="${eventDetail.image}" class="card-img-top" alt="${eventDetail.name}">
-      <h5 class="card-title">${eventDetail.name}</h5>
-      <p class="card-text">${eventDetail.description}</p>
-      <div class="row d-flex justify-content-center">
-        <p>Price: ${eventDetail.price}$</p>
-      </div>
-    </div>
-  `;
+  
