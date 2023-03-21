@@ -14,6 +14,8 @@ async function getData(){
 
 getData();
 let attendanceEvents=[];
+
+
 async function getAttendanceEvents(){
    attendanceEvents = await getData()
 
@@ -32,8 +34,11 @@ async function getAttendanceEvents(){
 };
 getAttendanceEvents();
 
+
 let pastAttendanceEvents=[];
 let upcomingAttendanceEvents=[];
+
+
 async function getTimeEvents(){
   await getAttendanceEvents();
   console.log(attendanceEvents);
@@ -48,23 +53,133 @@ async function getTimeEvents(){
 };
 getTimeEvents();
 
-let highestAtt={};
-let lowestAtt={};
-let highestCap={};
-let sortedAttendanceEvents=[];
-let sortedCapacityEvents=[];
-async function getRows(){
+
+async function getRowEvents() {
+  await getAttendanceEvents();
+  loadStatsEvents();
   await getTimeEvents();
-  sortedAttendanceEvents = attendanceEvents.sort((a, b) => b.attendancePercentage - a.attendancePercentage);
-  sortedCapacityEvents = attendanceEvents.sort((a,b) => {
-    return b.capacity - a.capacity;
-  });
-  highestAtt = sortedAttendanceEvents[0];
-  lowestAtt = sortedAttendanceEvents[(sortedAttendanceEvents.length-1)];
-  highestCap = sortedCapacityEvents[0];
-  console.log(highestAtt);
-  console.log(lowestAtt);
-  console.log(highestCap);
-  console.log(sortedAttendanceEvents);
+  upcomingCategories= extractCategory(upcomingAttendanceEvents);
+  pastCategories = extractCategory(pastAttendanceEvents);
+  loadStatsUpcomingEvents();
+  // loadStatsPastEvents();
 }
-getRows();
+
+
+// categories = extractCategory(events);
+
+function extractCategory(events){
+  let category = [];
+  events.forEach(event => {
+          if(!category.includes(event.category)) {
+              category.push(event.category);
+          }
+      });
+  return category;
+}
+
+function loadStatsEvents() {
+  let container = document.getElementById("EventsStats");
+  let tableBodyHTML = "";
+    
+  let masGrande = getBiggerAttendance(attendanceEvents);
+  let masChico = getSmallerAttendance(attendanceEvents);
+  let masGrandeCapacity = getBiggerCapacity(attendanceEvents);
+  tableBodyHTML += `<tr>
+      <td>${masGrande.attendancePercentage} (${masGrande.name})</td>
+      <td>${masChico.attendancePercentage} (${masChico.name})</td>
+      <td>${masGrandeCapacity.capacity} (${masGrandeCapacity.name})</td>
+  </tr>`;
+  
+  container.innerHTML = tableBodyHTML;
+}
+
+function loadStatsUpcomingEvents() {
+  let container = document.getElementById("UpcomingEventsStats");
+  let tableBodyHTML = "";
+  upcomingCategories.forEach(category => {
+    let revenues = 0;
+    let promPercentageAttendance= 0;
+    upcomingAttendanceEvents.filter(event=>{
+      if(event.category.includes(category))
+      revenues += event.price*event.estimate
+    })
+    let cont=0;
+    let acumPercentageAttendance=0;
+    upcomingAttendanceEvents.filter(event=>{
+      
+      if(event.category.includes(category)){
+        acumPercentageAttendance += event.attendancePercentage
+        cont = cont+1;
+    }
+    })
+    if(cont!=0)
+    promPercentageAttendance= acumPercentageAttendance/cont;
+    tableBodyHTML += `<tr>
+    <td>${category}</td>
+    <td>${revenues}</td>
+    <td>${promPercentageAttendance}</td>
+    </tr>`;
+
+  })
+  
+  
+  container.innerHTML = tableBodyHTML;
+ 
+}
+
+function loadStatsPastEvents(categories) {
+  let container = document.getElementById("pastEventsStats");
+  let tableBodyHTML = "";
+    
+  let masGrande = getBiggerAttendance(attendanceEvents);
+  let masChico = getSmallerAttendance(attendanceEvents);
+  let masGrandeCapacity = getBiggerCapacity(attendanceEvents);
+  tableBodyHTML += `<tr>
+      <td>${masGrande.attendancePercentage} (${masGrande.name})</td>
+      <td>${masChico.attendancePercentage} (${masChico.name})</td>
+      <td>${masGrandeCapacity.capacity} (${masGrandeCapacity.name})</td>
+  </tr>`;
+  
+  container.innerHTML = tableBodyHTML;
+}
+
+function getEventsByCategories(category, events) {
+  return events.filter(event => event.category.includes(category));
+}
+
+function getPromedioAttendance(eventsToWorkWith) {
+  let sumaPercentageAttendance = 0;
+  eventsToWorkWith.forEach(event => sumaPercentageAttendance += eventsToWorkWith.attendancePercentage);
+  return Math.round(sumaPercentageAttendance / eventsToWorkWith.length);
+}
+
+function getBiggerAttendance(eventsToWorkWith) {
+  return eventsToWorkWith.reduce((acumulador, valorActual) => {
+      if (valorActual.attendancePercentage > acumulador.attendancePercentage) {
+          return valorActual;
+      } else {
+          return acumulador;
+      }
+  });
+}
+function getBiggerCapacity(eventsToWorkWith) {
+  return eventsToWorkWith.reduce((acumulador, valorActual) => {
+      if (valorActual.capacity > acumulador.capacity) {
+          return valorActual;
+      } else {
+          return acumulador;
+      }
+  });
+}
+
+function getSmallerAttendance(eventsToWorkWith) {
+  return eventsToWorkWith.reduce((acumulador, valorActual) => {
+      if (valorActual.attendancePercentage < acumulador.attendancePercentage) {
+          return valorActual;
+      } else {
+          return acumulador;
+      }
+  });
+}
+  
+getRowEvents();
