@@ -59,13 +59,13 @@ async function getRowEvents() {
   loadStatsEvents();
   await getTimeEvents();
   upcomingCategories= extractCategory(upcomingAttendanceEvents);
+  console.log(upcomingCategories);
   pastCategories = extractCategory(pastAttendanceEvents);
+  console.log(pastCategories);
   loadStatsUpcomingEvents();
-  // loadStatsPastEvents();
+  loadStatsPastEvents();
 }
 
-
-// categories = extractCategory(events);
 
 function extractCategory(events){
   let category = [];
@@ -96,18 +96,20 @@ function loadStatsEvents() {
 function loadStatsUpcomingEvents() {
   let container = document.getElementById("UpcomingEventsStats");
   let tableBodyHTML = "";
-  upcomingCategories.forEach(category => {
+  upcomingCategories.forEach(cat => {
     let revenues = 0;
     let promPercentageAttendance= 0;
     upcomingAttendanceEvents.filter(event=>{
-      if(event.category.includes(category))
+      if(event.category.includes(cat))
       revenues += event.price*event.estimate
+      else
+      revenues=revenues;
     })
     let cont=0;
     let acumPercentageAttendance=0;
     upcomingAttendanceEvents.filter(event=>{
       
-      if(event.category.includes(category)){
+      if(event.category.includes(cat)){
         acumPercentageAttendance += event.attendancePercentage
         cont = cont+1;
     }
@@ -115,7 +117,7 @@ function loadStatsUpcomingEvents() {
     if(cont!=0)
     promPercentageAttendance= acumPercentageAttendance/cont;
     tableBodyHTML += `<tr>
-    <td>${category}</td>
+    <td>${cat}</td>
     <td>${revenues}</td>
     <td>${promPercentageAttendance}</td>
     </tr>`;
@@ -127,22 +129,41 @@ function loadStatsUpcomingEvents() {
  
 }
 
-function loadStatsPastEvents(categories) {
+function loadStatsPastEvents() {
   let container = document.getElementById("pastEventsStats");
   let tableBodyHTML = "";
-    
-  let masGrande = getBiggerAttendance(attendanceEvents);
-  let masChico = getSmallerAttendance(attendanceEvents);
-  let masGrandeCapacity = getBiggerCapacity(attendanceEvents);
-  tableBodyHTML += `<tr>
-      <td>${masGrande.attendancePercentage} (${masGrande.name})</td>
-      <td>${masChico.attendancePercentage} (${masChico.name})</td>
-      <td>${masGrandeCapacity.capacity} (${masGrandeCapacity.name})</td>
-  </tr>`;
+  pastCategories.forEach(cat => {
+    let revenues = 0;
+    let promPercentageAttendance= 0;
+    pastAttendanceEvents.filter(event=>{
+      if(event.category.includes(cat))
+      revenues += (event.price*event.assistance)
+      else
+      revenues=revenues;
+    })
+    let cont=0;
+    let acumPercentageAttendance=0;
+    pastAttendanceEvents.filter(event=>{
+      
+      if(event.category.includes(cat)){
+        acumPercentageAttendance += event.attendancePercentage
+        cont = cont+1;
+    }
+    })
+    if(cont!=0)
+    promPercentageAttendance= acumPercentageAttendance/cont;
+    tableBodyHTML += `<tr>
+    <td>${cat}</td>
+    <td>${revenues}</td>
+    <td>${promPercentageAttendance}</td>
+    </tr>`;
+
+  })
+  
   
   container.innerHTML = tableBodyHTML;
+ 
 }
-
 function getEventsByCategories(category, events) {
   return events.filter(event => event.category.includes(category));
 }
